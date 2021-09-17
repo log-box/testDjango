@@ -16,8 +16,8 @@ class Questions(models.Model):
     commentForJudge = models.CharField("Комментарий к вопросу", max_length=400, blank=False)
     aboutQuestion = models.CharField("Описание вопроса", max_length=2000, blank=False)
     link = models.CharField("Источник информации", max_length=50, blank=False)
-    themeOfQuestion = models.CharField("Тема", max_length=150, blank=False)
-    questionCategory = models.CharField("Категория", max_length=120, blank=False)
+    # themeOfQuestion = models.CharField("Тема", max_length=150, blank=False)
+    # questionCategory = models.CharField("Категория", max_length=120, blank=False)
     sectionOfQuestion = models.CharField("Раздел", max_length=55, blank=False)
     complexityOfQuestion = models.IntegerField("Сложность по десятибальной шкале", blank=False, null=True, default=0)
 
@@ -25,10 +25,13 @@ class Questions(models.Model):
     date_ques_sub = models.DateField("Дата подачи вопроса", blank=False)
     base_date = models.DateField("Дата добавления в базу", blank=False, null=True)
 
+    # recursive = models.ForeignKey('self', on_delete=models.PROTECT)
+
     def save(self, *args, **kwargs):
         if not self.id:
             self.date_ques_sub = timezone.now()
         return super(Questions, self).save(*args, **kwargs)
+
 
 class QuestionsComments(models.Model):
     """Модель комментариев для вопросов"""
@@ -40,3 +43,15 @@ class QuestionsReviewer(models.Model):
     question = models.OneToOneField(Questions, on_delete=models.CASCADE, primary_key=True)
     reviewer = models.CharField("Рецензент", max_length=30, blank=True)
     reviewer_date = models.DateField("Дата рецензии", blank=True)
+
+
+class QuestionsThemes(models.Model):
+    """Модель тем для вопросов"""
+    question = models.ManyToManyField(Questions)
+    themeOfQuestion = models.CharField("Тема", max_length=150, blank=False)
+
+
+class QuestionsThemesCategory(models.Model):
+    """Модель категорий для тем"""
+    themeOfQuestion = models.ManyToManyField(QuestionsThemes)
+    questionCategory = models.CharField("Категория", max_length=120, blank=False)
