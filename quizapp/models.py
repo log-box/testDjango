@@ -15,7 +15,7 @@ class Questions(models.Model):
     wrongAnswerThree = models.CharField("Первый неправильный ответ", max_length=50, blank=False)
     commentForJudge = models.CharField("Комментарий к вопросу", max_length=400, blank=False)
     aboutQuestion = models.CharField("Описание вопроса", max_length=3000, blank=False)
-    themeOfQuestion = models.CharField("Тема", max_length=150, blank=True, null=True)
+    # themeOfQuestion = models.CharField("Тема", max_length=150, blank=True, null=True)
     link = models.CharField("Источник информации", max_length=50, blank=False)
     sectionOfQuestion = models.CharField("Раздел", max_length=55, blank=False, default='null')
     complexityOfQuestion = models.IntegerField("Сложность по десятибальной шкале", blank=False, null=True, default=0)
@@ -36,16 +36,15 @@ class QuestionsReviewer(models.Model):
     reviewer_date = models.DateField("Дата рецензии", blank=True)
 
 
-# class QuestionsThemes(models.Model):
-#     """Модель тем для вопросов"""
-#     # question = models.ForeignKey(Questions, on_delete=models.CASCADE, primary_key=True)
-#     question = models.ManyToManyField(Questions)
+class QuestionsThemes(models.Model):
+    """Модель тем для вопросов"""
+    theme = models.CharField("Тема", max_length=150)
+    question = models.ForeignKey(Questions, on_delete=models.CASCADE )
 
 
 
 class QuestionsThemesCategory(models.Model):
     """Модель категорий для тем"""
-    # themeOfQuestion = models.ForeignKey(QuestionsThemes, on_delete=models.CASCADE, blank=True, null=True)
     questionCategory = models.CharField("Категория", max_length=120)
     question = models.ForeignKey(Questions, on_delete=models.CASCADE, blank=True, null=True)
 
